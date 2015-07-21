@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html> 
+	<head>
+		<title><%= title %></title>
+		<link rel='stylesheet' href='/css/analysis.css' />
+		<script stype="text/javascript" src="/js/ccchart-min.js" charset="utf-8"></script>
+		<script> var activeness = <%- JSON.stringify(activeness) %>;</script>
+		<script> var category = <%- JSON.stringify(category) %>;</script>
+	</head>
+	<body>
+		<h1><%= title %></h1>
+		<h2>dashboard</h2>
+		<center>
+			<canvas id="chart1"></canvas>
+			<canvas id="chart2"></canvas>
+		</center>
+		<script stype="text/javascript" src="/js/analysis.js" charset="utf-8"></script>
+		
+</body>
+
+</html>

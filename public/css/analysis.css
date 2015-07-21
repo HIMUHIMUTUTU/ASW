@@ -1,0 +1,49 @@
+body {
+	padding: 50px;
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+	color: #00B7FF;
+}
+
+div#container {
+	width:980px;
+	margin-left:auto;
+	margin-right:auto;
+}
+div#editorbox{
+	width:600px;
+	float:left;
+}
+
+
+div#infobox {
+	width:300px;
+	float:left;
+}
+
+#clearbox {
+	width:100%;
+	clear:left;
+}
+
+div#radioList {
+	visibility: hidden;
+	padding: 10px;
+	border-radius: 5px;
+	background-color: #ffcccc;
+}	
+table {
+	border-collapse: collapse;
+	border: 1px #696969 solid;
+}
+td, th {
+	border: 1px #696969 solid;
+}
+td.transition, th.transition {
+	width: 50px;
+}
+td.script {
+	width: 40%;
+}
