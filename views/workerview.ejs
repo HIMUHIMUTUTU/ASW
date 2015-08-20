@@ -3,12 +3,18 @@
 	<head>
 		<title><%= title %></title>
 		<link rel='stylesheet' href='/css/analysis.css' />
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+		<script stype="text/javascript" src="/js/workerview.js" charset="utf-8"></script>
 	</head>
 	<body>
 		<h1><%= title %></h1>
+		<p><span id="username">-</span>さんの入力値</p>
+		<p><input type="range" id="metric" name="metric" min="-10" max="10"></p>
+		<p><span id="metricValue">-</span></p>
+		<hr />
 		<center>
 			<img src='/img/workersample.png' width="100%">
 		</center>
-</body>
+	</body>
 
 </html>

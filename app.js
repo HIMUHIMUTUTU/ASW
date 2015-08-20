@@ -47,3 +47,8 @@ server.listen(app.get('port'), function(){
 	console.log('Express server listening on port ' + app.get('port'));
 });
 
+/* For socket-io */ 
+var socketIO = require('socket.io');
+var io = socketIO.listen(server);
+app.set('io', io);
+require('./socketio');
