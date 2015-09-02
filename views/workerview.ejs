@@ -8,9 +8,20 @@
 	</head>
 	<body>
 		<h1><%= title %></h1>
-		<p><span id="username">-</span>さんの入力値</p>
-		<p><input type="range" id="metric" name="metric" min="-10" max="10"></p>
-		<p><span id="metricValue">-</span></p>
+		<p><span id="username">-</span>さんのデータ</p>
+		<p><h2>入力値</h2></p>
+		<p>測定指標1: <span id="metricValue1">0</span></p>
+		<p><input type="range" id="metric1" name="metric" min="-10" max="10"></p>
+		<p>測定指標2: <span id="metricValue2">0</span></p>
+		<p><input type="range" id="metric2" name="metric" min="-10" max="10"></p>
+		<p>測定指標3: <span id="metricValue3">0</span></p>
+		<p><input type="range" id="metric3" name="metric" min="-10" max="10"></p>
+		<p><h2>発話</h2></p>
+		<canvas id="canvas" width="700" height="30"></canvas>
+		<p><span id="sp">&nbsp;</span></p>
+		<br />
+		<br />
+		<br />
 		<hr />
 		<center>
 			<img src='/img/workersample.png' width="100%">

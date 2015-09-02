@@ -19,14 +19,26 @@ function MAIN(){
 		console.log("UPDATETABLE");
 		var t = document.createElement("table");
 
-		for(var i=0; i< data.length; i++){
+		for(var i=-1; i< data.length; i++){
 			var tr = t.insertRow(-1);
 			var tc0 = tr.insertCell(-1);
 			var tc1 = tr.insertCell(-1);
 			var tc2 = tr.insertCell(-1);
-			tc0.innerHTML = data[i].id;
-			tc1.innerHTML = data[i].name;
-			tc2.innerHTML = data[i].metric;
+			var tc3 = tr.insertCell(-1);
+			var tc4 = tr.insertCell(-1);
+			if(i == -1){
+				tc0.innerHTML = "id" 
+					tc1.innerHTML = "お名前" 
+					tc2.innerHTML = "測定指標1" 
+					tc3.innerHTML = "測定指標2" 
+					tc4.innerHTML = "測定指標3" 
+			}else{
+				tc0.innerHTML = data[i].id;
+				tc1.innerHTML = data[i].name;
+				tc2.innerHTML = data[i].metric[0];
+				tc3.innerHTML = data[i].metric[1];
+				tc4.innerHTML = data[i].metric[2];
+			}
 		}
 
 		document.getElementById("sumtable").innerHTML = "";
