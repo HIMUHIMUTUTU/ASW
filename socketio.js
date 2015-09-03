@@ -14,9 +14,9 @@ io.sockets.on('connection', function(socket) {
 	//authentication and ID management
 	socket.on('auth', function(data){
 		common.clientAuth[data.type][socket.id] = socket;
-		
+
 		if(data.id == null && data.type == "worker"){
-			common.clientStatus.push({id:common.totalId, name:data.name, metric:null});
+			common.clientStatus.push({id:common.totalId, name:data.name, metric:[0,0,0], speak:0});
 			console.dir(common.clientAuth);
 			console.dir(common.clientStatus);
 
@@ -49,6 +49,29 @@ io.sockets.on('connection', function(socket) {
 		}
 	}); 
 
+	socket.on('updateSpeak', function(data){
+		console.log(data);
+		for(var i = 0; i < common.clientStatus.length; i++){
+			if(common.clientStatus[i].id == data.id){
+				common.clientStatus[i].speak = data.speak;
+			}
+		}
+		console.log(common.clientStatus);
+
+		for (key in common.clientAuth['dj']){
+			var csocket = common.clientAuth['dj'][key]
+				csocket.emit('updateTable', common.clientStatus);
+		}
+	}); 
+
+	socket.on('reset', function(data){
+		console.log("RESET CLIENTSTATUS)");
+		common.clientStatus = []; 
+		for (key in common.clientAuth['dj']){
+			var csocket = common.clientAuth['dj'][key]
+				csocket.emit('updateTable', common.clientStatus);
+		}
+	}); 
 	/**
 	  socket.on('loadRequest', function(data){
 	  referlog.selectScript(data.value, 1, function(script_data){

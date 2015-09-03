@@ -68,7 +68,7 @@ function Sound(){
 	}
 
 	var speak = new Speak()
-	var context = new AudioContext();
+		var context = new AudioContext();
 	var analyser; 
 
 	setupAudioNodes();
@@ -171,21 +171,22 @@ function Speak(){
 
 Speak.prototype.countdown = function(){
 	console.log(this.status_flag);
-	this.morat = this.morat -1;	
-	if(this.morat == 0){
-		this.status_flag = 0;
-		this.sp.innerHTML = "&nbsp"; 
-		this.morat = 2;
+	if(this.status_flag == 1){
+		this.morat = this.morat -1;	
+		if(this.morat == 0){
+			this.sp.innerHTML = "&nbsp"; 
+			common.socket.emit('updateSpeak', {id:common.client.id, speak:0});
+			this.status_flag = 0;
+		}
 	}
 	setTimeout(function(e){e.countdown();},1000,this);
 }
 
 Speak.prototype.fire = function(){
-	if(this.status_flag == 1){
-		this.morat = 2;
-	}
+	this.morat = 2;
 	if(this.status_flag == 0){
 		this.status_flag = 1;
 		this.sp.innerHTML = "<font color='red'>発話中</font>"; 
+		common.socket.emit('updateSpeak', {id:common.client.id, speak:1});
 	}
 }
