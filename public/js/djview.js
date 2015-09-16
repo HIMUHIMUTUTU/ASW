@@ -7,6 +7,11 @@ window.onload = function() {
 };
 
 function MAIN(){
+	this.reset = document.getElementById("reset");
+	this.time = document.getElementById("time");
+	this.startTimer = document.getElementById("startTimer");
+
+	var self = this;
 
 	common.socket = io.connect();
 	console.log("CONNECTING NETWORK..");
@@ -27,6 +32,8 @@ function MAIN(){
 				var tc3 = tr.insertCell(-1);
 				var tc4 = tr.insertCell(-1);
 				var tc5 = tr.insertCell(-1);
+				var tc6 = tr.insertCell(-1);
+				var tc7 = tr.insertCell(-1);
 				if(i == -1){
 					tc0.innerHTML = "id" 
 						tc1.innerHTML = "お名前" 
@@ -34,6 +41,8 @@ function MAIN(){
 						tc3.innerHTML = "測定指標2" 
 						tc4.innerHTML = "測定指標3" 
 						tc5.innerHTML = "発話" 
+						tc6.innerHTML = "発話期間" 
+						tc7.innerHTML = "総発話時間" 
 				}else{
 					tc0.innerHTML = data[i].id;
 					tc1.innerHTML = data[i].name;
@@ -45,6 +54,8 @@ function MAIN(){
 					}else{
 						tc5.innerHTML = "";
 					}
+					tc6.innerHTML = data[i].speakTime;
+					tc7.innerHTML = data[i].totalSpeakTime;
 				}
 
 				document.getElementById("sumtable").innerHTML = "";
@@ -53,10 +64,18 @@ function MAIN(){
 
 		}
 	});
+	this.reset.onclick = function(){self.Reset();} 
+	this.startTimer.onclick = function(){self.StartTimer();} 
 }
 
-function reset(){
+MAIN.prototype.Reset = function(){
+	console.log("RESETTABLE");
 	common.socket.emit('reset');
+}
+
+MAIN.prototype.StartTimer = function(){
+	console.log("STARTTIMER");
+	common.socket.emit('startTimer');
 }
 
 /**

@@ -16,7 +16,7 @@ io.sockets.on('connection', function(socket) {
 		common.clientAuth[data.type][socket.id] = socket;
 
 		if(data.id == null && data.type == "worker"){
-			common.clientStatus.push({id:common.totalId, name:data.name, metric:[0,0,0], speak:0});
+			common.clientStatus.push({id:common.totalId, name:data.name, metric:[0,0,0], speak:0, speakTime:[], totalSpeakTime:0});
 			console.dir(common.clientAuth);
 			console.dir(common.clientStatus);
 
@@ -53,10 +53,25 @@ io.sockets.on('connection', function(socket) {
 		console.log(data);
 		for(var i = 0; i < common.clientStatus.length; i++){
 			if(common.clientStatus[i].id == data.id){
+
+				//speak status
 				common.clientStatus[i].speak = data.speak;
+				//speak time
+				var ls = common.clientStatus[i].speakTime.length; 
+				if(data.speak == 1){
+					common.clientStatus[i].speakTime.push([data.time,data.time]);
+				}else if(data.speak == 0 && ls != 0){
+					common.clientStatus[i].speakTime[ls - 1][1] = data.time; 
+				}
+
+				//total speak time
+				if(data.speak == 0 && ls != 0){
+					common.clientStatus[i].totalSpeakTime += (common.clientStatus[i].speakTime[ls - 1][1] - common.clientStatus[i].speakTime[ls - 1][0]); 
+				}
+
 			}
 		}
-		console.log(common.clientStatus);
+		console.dir(common.clientStatus);
 
 		for (key in common.clientAuth['dj']){
 			var csocket = common.clientAuth['dj'][key]
@@ -64,12 +79,22 @@ io.sockets.on('connection', function(socket) {
 		}
 	}); 
 
+	//reset clientstatus
 	socket.on('reset', function(data){
-		console.log("RESET CLIENTSTATUS)");
+		console.log("RESET CLIENTSTATUS");
 		common.clientStatus = []; 
 		for (key in common.clientAuth['dj']){
 			var csocket = common.clientAuth['dj'][key]
 				csocket.emit('updateTable', common.clientStatus);
+		}
+	}); 
+
+	//start timer of clients
+	socket.on('startTimer', function(data){
+		console.log("START CLIENTTIMER");
+		for (key in common.clientAuth['worker']){
+			var csocket = common.clientAuth['worker'][key]
+				csocket.emit('startTimer');
 		}
 	}); 
 	/**
