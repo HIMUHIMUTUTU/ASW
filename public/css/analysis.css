@@ -47,3 +47,19 @@ td.transition, th.transition {
 td.script {
 	width: 40%;
 }
+
+/** feedback view **/
+div#messagee {
+	font-size: 30px;
+	text-align: center;
+	width: 50%;
+	background-color: #EEEEEE;
+}
+
+div#messageLevele {
+	font-size: 30px;
+	text-align: center;
+	width: 50%;
+	background-color: #EEEEEE;
+}
+

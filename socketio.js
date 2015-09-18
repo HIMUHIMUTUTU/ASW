@@ -1,4 +1,4 @@
-var common = {totalId:0, clientAuth:{dj:{}, worker:{}}, clientStatus:[]};
+var common = {totalId:0, clientAuth:{dj:{}, worker:{}, feedback:{}}, clientStatus:[]};
 /**
  * New node file
  */
@@ -13,6 +13,7 @@ io.sockets.on('connection', function(socket) {
 
 	//authentication and ID management
 	socket.on('auth', function(data){
+		console.log(data);
 		common.clientAuth[data.type][socket.id] = socket;
 
 		if(data.id == null && data.type == "worker"){
@@ -97,39 +98,49 @@ io.sockets.on('connection', function(socket) {
 				csocket.emit('startTimer');
 		}
 	}); 
+
+	//feedback to feedback view
+	socket.on('feedback', function(data){
+		console.log("FEEDBACK:" + data.type + data.id);
+		for (key in common.clientAuth['feedback']){
+			var csocket = common.clientAuth['feedback'][key];
+				csocket.emit('emitFeedback', {type:data.type, id:data.id});
+		}
+	}); 
+
 	/**
 	  socket.on('loadRequest', function(data){
 	  referlog.selectScript(data.value, 1, function(script_data){
-//send it to editor
-for (key in client['editor']){
-var csocket = client['editor'][key]
-csocket.emit('loadedScript', { value: script_data });
-}
-});
-});
+	//send it to editor
+	for (key in client['editor']){
+	var csocket = client['editor'][key]
+	csocket.emit('loadedScript', { value: script_data });
+	}
+	});
+	});
 
-socket.on('sentScript', function(data) {
-console.log("SERVER:RECIVE SENT SCRIPT:");
-console.dir(data.value);
+	socket.on('sentScript', function(data) {
+	console.log("SERVER:RECIVE SENT SCRIPT:");
+	console.dir(data.value);
 
-referlog.insertScript(data.value, function(err, data){
-if(err){
-console.log(err);
-}else{
-console.log("SERVER:SAVE COMPLETE");
-for (key in client['editor']){
-var csocket = client['editor'][key]
-csocket.emit('savedScriptId', { value: data });
-}
-}
-});
-});
+	referlog.insertScript(data.value, function(err, data){
+	if(err){
+	console.log(err);
+	}else{
+	console.log("SERVER:SAVE COMPLETE");
+	for (key in client['editor']){
+	var csocket = client['editor'][key]
+	csocket.emit('savedScriptId', { value: data });
+	}
+	}
+	});
+	});
 	 **/
 
-/** クライアントが切断したときの処理 **/
-socket.on('disconnect', function(){
-	console.log("disconnect");
-});
+	/** クライアントが切断したときの処理 **/
+	socket.on('disconnect', function(){
+		console.log("disconnect");
+	});
 });
 
 
