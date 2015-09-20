@@ -1,5 +1,5 @@
 var common = {
-	socket: null, lstorage:localStorage, ctx:null,  client:{ id: null, type: "feedback", name: "feedback" }
+	socket: null, lstorage:localStorage, ctx:null,  client:{ id: null, type: "feedback", name: "feedback" }, config:commonConfig
 };
 
 window.onload = function() {
@@ -10,12 +10,10 @@ function MAIN(){
 	this.imagee = document.getElementById("imagee");
 	this.messagee = document.getElementById("messagee");
 	this.messageLevele = document.getElementById("messageLevele");
-	this.feedbackmsg = [["休憩", "コーヒーを一服"],["してはいけません！","してもいいんじゃない？","してはいかが。","しなさい！","・・・"]];
-
 	this.audio = [];
-	for(var ai = 0; ai < 3; ai++){
+	for(var ai = 0; ai < common.config.feedback.sound.length; ai++){
 		this.audio[ai] = new Audio();
-		this.audio[ai].src = "/audio/feedback/" + ai + ".mp3";
+		this.audio[ai].src = "/audio/feedback/" + common.config.feedback.sound[ai].file;
 	}
 
 	var self = this; 
@@ -48,15 +46,15 @@ function MAIN(){
 	}
 
 	function emitMessage(i){
-		self.messagee.innerHTML = self.feedbackmsg[0][i]; 
+		self.messagee.innerHTML = common.config.feedback.message[i].message; 
 	}
 
 	function emitMessageLevel(i){
-		self.messageLevele.innerHTML = self.feedbackmsg[1][i]; 
+		self.messageLevele.innerHTML = common.config.feedback.messageLevel[i].message; 
 	}
 
 	function emitImage(i){
-		document.body.style.backgroundImage = "url(/img/feedback/" + i  + ".png)";
+		document.body.style.backgroundImage = "url(/img/feedback/" + common.config.feedback.image[i].file + ")";
 	}
 
 

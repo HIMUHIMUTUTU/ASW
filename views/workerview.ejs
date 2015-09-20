@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html> 
 	<head>
-		<title><%= title %></title>
+		<title>worker用入力情報表示画面</title>
 		<link rel='stylesheet' href='/css/analysis.css' />
 		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 		<script stype="text/javascript" src="/js/workerview.js" charset="utf-8"></script>
 	</head>
 	<body>
-		<h1><%= title %></h1>
+		<h1>worker用入力情報表示画面</h1>
 		<p><span id="username">-</span>さんのデータ</p>
+		<p><span id="regStatus">|| 停止中</span></p>
 		<p><h2>入力値</h2></p>
-		<p>測定指標1: <span id="metricValue1">0</span></p>
+		<p><%= config.usermetric[0] %>: <span id="metricValue1">0</span></p>
 		<p><input type="range" id="metric1" name="metric" min="-10" max="10"></p>
-		<p>測定指標2: <span id="metricValue2">0</span></p>
+		<p><%= config.usermetric[1] %>: <span id="metricValue2">0</span></p>
 		<p><input type="range" id="metric2" name="metric" min="-10" max="10"></p>
-		<p>測定指標3: <span id="metricValue3">0</span></p>
+		<p><%= config.usermetric[2] %>: <span id="metricValue3">0</span></p>
 		<p><input type="range" id="metric3" name="metric" min="-10" max="10"></p>
 		<p><h2>発話</h2></p>
 		<canvas id="canvas" width="700" height="30"></canvas>

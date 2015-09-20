@@ -1,0 +1,31 @@
+{
+	"requirement": {
+		"usermetric": [
+			"測定指標1",
+			"測定指標2",
+			"測定指標3"
+		],
+		"feedback": {
+			"sound": [
+				{"name": "せせらぎ", "file": "0.mp3"},
+				{"name": "万歳三唱", "file": "1.mp3"},
+				{"name": "効果音", "file": "2.mp3"}
+			],
+			"message": [
+				{"name": "休憩","message": "休憩"},
+				{"name": "コーヒー","message": "コーヒーで一服"}
+			],
+			"messageLevel": [
+				{"name": "禁止","message": "してはいけません！"},
+				{"name": "ほのめかし","message": "してもいいんじゃない？"},
+				{"name": "促し","message": "してはいかが？"},
+				{"name": "強制","message": "しなさい！"},
+				{"name": "放任","message": "・・・"}
+			],
+			"image": [
+				{"name": "炎", "file": "0.png"},
+				{"name": "氷", "file": "1.png"}
+			]
+		}
+	}
+}

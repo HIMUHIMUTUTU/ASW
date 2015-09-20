@@ -3,6 +3,7 @@
  */
 
 exports.view = function(req, res){
-	res.render('feedbackview', { title: 'feedback画面'});
+	var c = require('../setting/config.json');
+	res.render('feedbackview', {config: c.requirement});
 };
 

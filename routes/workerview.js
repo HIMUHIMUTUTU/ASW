@@ -3,6 +3,7 @@
  */
 
 exports.view = function(req, res){
-	res.render('workerview', { title: 'worker用入力情報表示画面'});
+	var c = require('../setting/config.json');
+	res.render('workerview', {config: c.requirement});
 };
 

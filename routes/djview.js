@@ -3,6 +3,7 @@
  */
 
 exports.view = function(req, res){
-	res.render('djview', { title: 'Work Place Jockey向け操作パネル'});
+	var c = require('../setting/config.json');
+	res.render('djview', {config: c.requirement});
 };
 

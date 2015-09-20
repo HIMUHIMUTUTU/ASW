@@ -1,0 +1,13 @@
+{
+	"databaseAuth": {
+		"user": "",
+		"database": "",
+		"password": "",
+		"host": "",
+		"port": "" 
+	},
+	"basicAuth": {
+		"user": "dummy",
+		"pass": "dummy"
+	}
+}
