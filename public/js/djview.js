@@ -28,6 +28,8 @@ function MAIN(){
 		this.imagef[ii] = document.getElementById("imagef" + ii);
 	}
 	this.timer = new Timer(); 
+	this.sp = new SpeakPanel(); 
+
 	var self = this;
 	loopShowTimer();
 
@@ -42,6 +44,8 @@ function MAIN(){
 	common.socket.on('updateTable', function(data) {
 		if(data != null){
 			self.UpdateTable(data);
+			self.sp.display(data);
+			TotalSpeakChart(data);
 		}
 	});
 
@@ -102,6 +106,65 @@ function MAIN(){
 		setTimeout(loopShowTimer,500);
 	}
 
+	function SpeakPanel(){
+		this.canvas = document.getElementById('speakPanel');
+		this.ctx = this.canvas.getContext('2d');
+		this.ctx.font = "14px Arial";
+		this.name_x = 100;
+	}
+
+	SpeakPanel.prototype.reset = function(){
+		this.ctx.clearRect(0, 0, this.canvas.width,this.canvas.height);
+		this.ctx.strokeStyle='#696969';
+		this.ctx.strokeRect(0, 0, this.name_x,this.canvas.height);
+		var gw = (this.canvas.width - this.name_x)/3 ;
+		for(var gi = 0; gi < 3; gi++){
+			this.ctx.strokeRect(this.name_x + gw * gi, 0, gw, this.canvas.height);
+		}
+	}
+
+	SpeakPanel.prototype.display = function(data){
+		this.reset();
+		var bw = 10;
+		for(var di = 0; di < data.length; di++){
+			this.ctx.fillStyle = "rgb(0, 0, 0)";
+			this.ctx.fillText(data[di].name , 7 , di * 28 + 21);  
+			console.log(data[di].speakTime.length);
+			for(var si = 0; si < data[di].speakTime.length; si++){
+				this.ctx.fillStyle = "rgb(219, 36, 91)";
+				this.ctx.fillRect(data[di].speakTime[si][0]/1000/2 + this.name_x, di * 28 + 10 ,(data[di].speakTime[si][1] - data[di].speakTime[si][0])/1000/2 , bw);
+			}
+		}
+
+	}
+
+	function TotalSpeakChart(data){ 
+		var cdata = [['総発話時間']] 
+			for(var di = 0; di < data.length; di++){
+				cdata.push([data[di].name, data[di].totalSpeakTime]);
+			}
+		console.dir(cdata);
+		var chartdata = {
+			"config": {
+				"title": "",
+				"subTitle": "",
+				"type": "pie",
+				"percentVal": "yes",
+				"useVal": "yes",
+				"pieDataIndex": 0,
+				"colNameFont": "100 18px 'Arial'",
+				"pieRingWidth": 80,
+				"pieHoleRadius": 40,
+					//		"textColor": "#888",
+				"bg": "#fff",
+				"textColor": "#696969",
+				"useShadow" : "no"
+			},
+			"data":cdata 
+		};
+		ccchart.init('totalSpeakChart', chartdata);
+	}
+
 }
 
 MAIN.prototype.UpdateTable = function(data){
@@ -111,16 +174,23 @@ MAIN.prototype.UpdateTable = function(data){
 	for(var i=-1; i< data.length; i++){
 		var tr = t.insertRow(-1);
 		var tc = [];
-		for(var tci = 0; tci < 8; tci++){
+		for(var tci = 0; tci < 7; tci++){
 			tc[tci] = tr.insertCell(-1);
 			if(i == -1){
 				//table title
-				var tcTitle = ["id", "お名前", common.config.usermetric[0], common.config.usermetric[1], common.config.usermetric[2], "発話", "発話期間", "総発話時間"];
+				var tcTitle = ["id", "お名前", common.config.usermetric[0], common.config.usermetric[1], common.config.usermetric[2], "発話", "総発話時間"];
 				tc[tci].innerHTML = tcTitle[tci]; 
 			}else{
 				//table data 
-				var tcData = [data[i].id, data[i].name,data[i].metric[0],data[i].metric[1],data[i].metric[2],"",data[i].speakTime,data[i].totalSpeakTime];
+				var s = "";
+				if(data[i].speak == 1){
+					var s = "<font color='red'>●</font>"
+				}
+				var tcData = [data[i].id, data[i].name,data[i].metric[0],data[i].metric[1],data[i].metric[2],s,data[i].totalSpeakTime];
 				tc[tci].innerHTML = tcData[tci]; 
+			}
+			if(i != -1){
+				console.log(data[i].speakTime);
 			}
 		}
 

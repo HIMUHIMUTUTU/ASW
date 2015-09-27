@@ -3,6 +3,7 @@
 	<head>
 		<title>DJ用集計・フィードバック画面</title>
 		<link rel='stylesheet' href='/css/analysis.css' />
+		<script stype="text/javascript" src="/js/ccchart-min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 		<script> var commonConfig = <%- JSON.stringify(config) %>;</script>
 		<script stype="text/javascript" src="/js/djview.js" charset="utf-8"></script>
@@ -16,7 +17,10 @@
 		<h2>入力指標サマリー</h2>
 		<p><a id="reset">リセット</a></p>
 		<div id="sumtable"></div>
-
+		<br />
+		<br />
+		<canvas id="speakPanel" width="1000" height="200"></canvas>
+		<canvas id="totalSpeakChart"></canvas>
 		<hr /> 
 		<h2>フィードバック</h2>
 		<p>効果音</p>

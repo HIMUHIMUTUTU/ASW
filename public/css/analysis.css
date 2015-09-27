@@ -48,6 +48,10 @@ td.script {
 	width: 40%;
 }
 
+canvas#speakPanel {
+	border: solid 1px #696969;
+}
+
 /** feedback view **/
 div#messagee {
 	font-size: 30px;
