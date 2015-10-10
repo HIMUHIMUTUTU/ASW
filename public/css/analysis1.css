@@ -1,10 +1,30 @@
 body {
 	padding: 50px;
 	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	background-color: #e7e7e7;
+	background-repeat: repeat;
 }
+
+h1 {
+	color: #5f5f5f;
+}
+
 
 a {
 	color: #00B7FF;
+	background: url("./button1.png") no-repeat;
+	display: inline-block;
+	text-decoration: none;
+	text-align: center;
+	width: 108px;
+	height: 27px;
+	padding-top: 4px;
+	font-weight: bold;
+}
+
+a:hover{
+	　background: url("./button2.png") no-repeat;
+	　color: #e8b7b4;
 }
 
 div#container {
@@ -33,7 +53,7 @@ div#radioList {
 	padding: 10px;
 	border-radius: 5px;
 	background-color: #ffcccc;
-}	
+}
 table {
 	border-collapse: collapse;
 	border: 1px #696969 solid;
@@ -66,4 +86,3 @@ div#messageLevele {
 	width: 50%;
 	background-color: #EEEEEE;
 }
-

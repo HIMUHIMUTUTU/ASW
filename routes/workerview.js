@@ -4,6 +4,14 @@
 
 exports.view = function(req, res){
 	var c = require('../setting/config.json');
-	res.render('workerview', {config: c.requirement});
+	if(req.query.id){
+		if(!(req.query.id.match(/[^0-9]+/))){
+			res.render('workerview', {config: c.requirement, id:req.query.id});
+		}else{
+			res.render('caution');
+		}
+	}else{
+		res.render('caution');
+	}
 };
 

@@ -2,31 +2,28 @@
 <html> 
 	<head>
 		<title>worker用入力情報表示画面</title>
-		<link rel='stylesheet' href='/css/analysis.css' />
+		<link rel='stylesheet' href='/css/asw.css' />
 		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+		<script> var gid = <%- JSON.stringify(id) %>;</script>
 		<script stype="text/javascript" src="/js/workerview.js" charset="utf-8"></script>
 	</head>
 	<body>
 		<h1>worker用入力情報表示画面</h1>
-		<p><span id="username">-</span>さんのデータ</p>
-		<p><span id="regStatus">|| 停止中</span></p>
-		<p><h2>入力値</h2></p>
+		<p>PC:<%= id %> お名前:<span id="username">-</span>さん(<a id="nameChange">変更</a>) 時間:<span id="time">00:00:00</span></p>
+		<p><h2>アンケート</h2></p>
+		<div id="metrics">
 		<p><%= config.usermetric[0] %>: <span id="metricValue1">0</span></p>
 		<p><input type="range" id="metric1" name="metric" min="-10" max="10"></p>
 		<p><%= config.usermetric[1] %>: <span id="metricValue2">0</span></p>
 		<p><input type="range" id="metric2" name="metric" min="-10" max="10"></p>
 		<p><%= config.usermetric[2] %>: <span id="metricValue3">0</span></p>
 		<p><input type="range" id="metric3" name="metric" min="-10" max="10"></p>
+		</div>
 		<p><h2>発話</h2></p>
-		<canvas id="canvas" width="700" height="30"></canvas>
-		<p><span id="sp">&nbsp;</span></p>
+		<canvas id="canvas1" width="700" height="30"></canvas>
+		<p><h2>脳波</h2></p>
+		<canvas id="canvas2" width="700" height="70"></canvas>
 		<br />
-		<br />
-		<br />
-		<hr />
-		<center>
-			<img src='/img/workersample.png' width="100%">
-		</center>
 	</body>
 
 </html>

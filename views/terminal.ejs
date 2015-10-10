@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html> 
 	<head>
-		<title><%= title %></title>
-		<link rel='stylesheet' href='/css/analysis.css' />
+		<title>NEO行動センシングワークプレイスシステム(仮)　暫定版</title>
+		<link rel='stylesheet' href='/css/asw.css' />
 	</head>
 	<body>
-		<h1><%= title %></h1>
+		<h1>NEO行動センシングワークプレイスシステム(仮)　暫定版</h1>
 		<ul>
 			<li>(1) <a href='/djview' target="_blank">DJ用集計・フィードバック画面</a></li>
-			<li>(2) <a href='/workerview' target="_blank">worker用入力情報表示画面</a></li>
+			<li>(2) worker用入力情報表示画面&nbsp;&nbsp;
+				<% for(var pc=0; pc<5; pc++) { %>
+				<a href='/workerview?id=<%= pc %>' target="_blank">PC<%= pc %></a>&nbsp;   
+				<% } %>
+			</li>
 			<li>(3) <a href='/feedbackview' target="_blank">部屋内フィードバック用画面</a> (操作により音が出ます)</li>
 		</ul>
 		<hr />
