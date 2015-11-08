@@ -8,6 +8,10 @@
 		],
 		"feedback": {
 			"sound": [
+				{"name": "拍手", "file": "pachi.mp3"},
+				{"name": "おおー", "file": "oh.mp3"},
+				{"name": "いいね", "file": "naka.mp3"},
+				{"name": "蛍の光", "file": "hotal.m4a"},
 				{"name": "せせらぎ", "file": "0.mp3"},
 				{"name": "万歳三唱", "file": "1.mp3"},
 				{"name": "カフェ", "file": "3.mp3"},
@@ -16,8 +20,15 @@
 				{"name": "ブザー", "file": "2.mp3"}
 			],
 			"message": [
-				{"name": "休憩","message": "休憩"},
-				{"name": "コーヒー","message": "コーヒーで一服"}
+				{"name": "なし","message": "　"},
+				{"name": "休憩","message": "休憩したら？"},
+				{"name": "寝ないで","message": "寝ないで"},
+				{"name": "聞いて","message": "聞いてあげて！"},
+				{"name": "楽しんでる？","message": "楽しんでいる？"},
+				{"name": "短めに","message": "短めにしてね"},
+				{"name": "脱線？","message": "脱線してませんか？"},
+				{"name": "仕切って","message": "仕切ってください"},
+				{"name": "コーヒー","message": "コーヒーで一服しませんか？"}
 			],
 			"messageLevel": [
 				{"name": "禁止","message": "してはいけません！"},
@@ -27,6 +38,13 @@
 				{"name": "放任","message": "・・・"}
 			],
 			"image": [
+				{"name": "なし", "file": "no.png"},
+				{"name": "いいね", "file": "iine.jpeg"},
+				{"name": "きゃ〜", "file": "kya.jpeg"},
+				{"name": "女子学生拍手", "file": "waa.jpeg"},
+				{"name": "ビジネス", "file": "bjump.jpeg"},
+				{"name": "同意", "file": "doui.jpeg"},
+				{"name": "女の人ジャンプ", "file": "jump.jpeg"},
 				{"name": "炎", "file": "0.png"},
 				{"name": "氷", "file": "1.png"}
 			]

@@ -2,8 +2,10 @@
 <html> 
 	<head>
 		<title>DJ用集計・フィードバック画面</title>
-		<link rel='stylesheet' href='/css/asw.css' />
+		<link rel="stylesheet" href="/css/asw.css" type="text/css" charset="utf-8" />
 		<script stype="text/javascript" src="/js/ccchart-min.js" charset="utf-8"></script>
+		<script src="/js/dist/vis.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="/js/dist/vis.css" type="text/css" charset="utf-8"/>
 		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 		<script> var commonConfig = <%- JSON.stringify(config) %>;</script>
 		<script stype="text/javascript" src="/js/djview.js" charset="utf-8"></script>
@@ -35,11 +37,28 @@
 		<h2>測定記録</h2>
 		<p><a class="dj" id="startTimer">Start/Reset</a></p>
 		<p><span id="time">00:00:00</span></p>
+		<h3>脳波パネル</h3>
+		<canvas id="mindwavePanel" width="300" height="300"></canvas>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<h3>時系列プロット</h3>
 		<canvas id="speakPanel" width="1000" height="200"></canvas>
 		<p><a id="p1">1</a>&nbsp;<a id="p2">2</a>&nbsp;<a id="p3">3</a> </p>
+		<h3>累積発話量比率</h3>
 		<canvas id="totalSpeakChart"></canvas>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<h3>会話ネットワーク</h3>
+		<div id="speakNetwork"></div>
 		<hr /> 
 		<h2>フィードバック</h2>
+
+		<p>誰に？</p>
+		<% for(var ui=0; ui<5; ui++) { %>
+		<a class="dj" id="userf<%= ui %>"><%= ui %>:</a>
+		<% } %>
+		<a class="dj" id="userf5">★:環境</a>
+
 		<p>効果音</p>
 		<% for(var si=0; si<config.feedback.sound.length; si++) { %>
 		<a class="dj" id="soundf<%= si %>"><%= config.feedback.sound[si].name%></a>
@@ -51,7 +70,7 @@
 		<% } %>
 		<br />
 		<% for(var mli=0; mli<config.feedback.messageLevel.length; mli++) { %>
-		<a class="dj" id="messageLevelf<%= mli %>"><%= config.feedback.messageLevel[mli].name%></a>
+		<a style="visibility:hidden;" class="dj" id="messageLevelf<%= mli %>"><%= config.feedback.messageLevel[mli].name%></a>
 		<% } %>
 
 		<p>画像</p>

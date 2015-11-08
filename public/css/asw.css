@@ -28,6 +28,18 @@ a.dj:hover{
 	　color: #e8b7b4;
 }
 
+a.djselected {
+	color: #00B7FF;
+	background: url("../img/button3.png") no-repeat;
+	display: inline-block;
+	text-decoration: none;
+	text-align: center;
+	width: 108px;
+	height: 27px;
+	padding-top: 4px;
+	font-weight: bold;
+}
+
 div#container {
 	width:980px;
 	margin-left:auto;
@@ -42,8 +54,16 @@ td, th {
 	border: 1px #696969 solid;
 }
 
+canvas#mindwavePanel {
+}
+
 canvas#speakPanel {
 	border: solid 1px #696969;
+}
+
+div#speakNetwork {
+	width: 600px;
+	height: 400px;
 }
 
 div#metrics{

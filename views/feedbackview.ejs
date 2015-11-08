@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html> 
 	<head>
-		<title>部屋内フィードバック用画面</title>
-		<link rel='stylesheet' href='/css/analysis.css' />
+		<title>フィードバック用画面</title>
+		<link rel='stylesheet' href='/css/asw.css' />
 		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+		<script> var gid = <%- JSON.stringify(id) %>;</script>
 		<script> var commonConfig = <%- JSON.stringify(config) %>;</script>
 		<script stype="text/javascript" src="/js/feedbackview.js" charset="utf-8"></script>
 	</head>

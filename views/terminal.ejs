@@ -13,7 +13,12 @@
 				<a href='/workerview?id=<%= pc %>' target="_blank">PC<%= pc %></a>&nbsp;   
 				<% } %>
 			</li>
-			<li>(3) <a href='/feedbackview' target="_blank">部屋内フィードバック用画面</a> (操作により音が出ます)</li>
+			<li>(3) フィードバック用画面 (操作により音が出ます)&nbsp;&nbsp;
+				<% for(var pc=0; pc<5; pc++) { %>
+				<a href='/feedbackview?id=<%= pc %>' target="_blank">PC<%= pc %></a>&nbsp;   
+				<% } %>
+				<a href='/feedbackview?id=5' target="_blank">★環境用</a>
+			</li>
 		</ul>
 		<hr />
 		<img src='/img/terminal.png'>
