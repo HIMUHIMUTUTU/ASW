@@ -9,6 +9,7 @@ var terminal = require('./routes/terminal');
 var djview = require('./routes/djview');
 var workerview = require('./routes/workerview');
 var feedbackview = require('./routes/feedbackview');
+var analysis = require('./routes/analysis');
 var http = require('http');
 var path = require('path');
 
@@ -43,6 +44,7 @@ app.get('/terminal', terminal.view);
 app.get('/djview', djview.view);
 app.get('/workerview', workerview.view);
 app.get('/feedbackview', feedbackview.view);
+app.get('/analysis', analysis.view);
 
 server = http.createServer(app);
 server.listen(app.get('port'), function(){

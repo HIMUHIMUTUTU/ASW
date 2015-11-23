@@ -213,9 +213,11 @@ function Analysis(){
 	this.to_client = -1;
 }
 
+//get speak transition
 Analysis.prototype.getTransition = function(time){
 	if(time - this.lasttime > this.interval){
 		console.log("GETTRANSITION");
+		//prepare speakstart time data set
 		ss = [[],[],[],[],[]];
 		for(var ci = 0; ci < common.clientStatus.length; ci++){
 			for(var st = 0; st < common.clientStatus[ci].speakTime.length; st++){
@@ -227,7 +229,8 @@ Analysis.prototype.getTransition = function(time){
 		console.dir(ss);
 
 		this.lasttime = time;
-
+		
+		//choose first element of each clients speakstart time and get max
 		var i = [0,0,0,0,0];	
 		var v = new Array(5);	
 
@@ -237,12 +240,14 @@ Analysis.prototype.getTransition = function(time){
 				if(typeof ss[x][i[x]] === "undefined"){v[x] = Infinity}else{v[x] = ss[x][i[x]]}
 			}
 			var arr = [v[0],v[1],v[2],v[3],v[4]];
+			//choose max
 			this.to_client = arr.indexOf(Math.min.apply(null,arr));
 			if(from_client != -1){
 				common.clientStatus[from_client].speaktoWho[this.to_client]++;
 			}
 			i[this.to_client]++;
 		}
+		//for log
 		for(var ci = 0; ci < common.clientStatus.length; ci++){
 			console.log(common.clientStatus[ci].speaktoWho);
 		}

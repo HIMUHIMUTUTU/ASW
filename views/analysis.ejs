@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html> 
 	<head>
-		<title><%= title %></title>
-		<link rel='stylesheet' href='/css/analysis.css' />
+		<title>Analysis</title>
+		<link rel='stylesheet' href='/css/asw.css' />
+		<script> var gdata = <%- JSON.stringify(gdata) %>;</script>
 		<script stype="text/javascript" src="/js/ccchart-min.js" charset="utf-8"></script>
-		<script> var activeness = <%- JSON.stringify(activeness) %>;</script>
-		<script> var category = <%- JSON.stringify(category) %>;</script>
+		<script src="/js/vis/vis.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="/js/vis/vis.css" type="text/css" charset="utf-8"/>
+		<script stype="text/javascript" src="/js/analysis.js" charset="utf-8"></script>
 	</head>
 	<body>
-		<h1><%= title %></h1>
-		<h2>dashboard</h2>
-		<center>
-			<canvas id="chart1"></canvas>
-			<canvas id="chart2"></canvas>
-		</center>
-		<script stype="text/javascript" src="/js/analysis.js" charset="utf-8"></script>
-		
+		<h1>Analysis</h1>
+		<h3>累積発話量比率</h3>
+		<canvas id="totalSpeakChart"></canvas>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<h3>会話ネットワーク</h3>
+		<div id="speakNetwork"></div>
 </body>
 
 </html>

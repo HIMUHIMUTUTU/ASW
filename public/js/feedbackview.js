@@ -7,7 +7,6 @@ window.onload = function() {
 };
 
 function MAIN(){
-	this.imagee = document.getElementById("imagee");
 	this.messagee = document.getElementById("messagee");
 	this.messageLevele = document.getElementById("messageLevele");
 	this.audio = [];
