@@ -11,6 +11,8 @@ function MAIN(){
 	//this.reset = document.getElementById("reset");
 	this.time = document.getElementById("time");
 	this.startTimer = document.getElementById("startTimer");
+	this.analysisTime = document.getElementById("analysisTime");
+	this.lastAnalysisTime = "";
 	this.sumtabletd = [];
 	for(var tri=0; tri < 5; tri++){
 		this.sumtabletd[tri] = [];
@@ -68,11 +70,26 @@ function MAIN(){
 		if(data != null){
 			self.UpdateTable(data.data);
 			self.sp.display(data.data);
-			self.mp.display(data.data);
-			if(data.type = "speak"){
-				TotalSpeakChart(data.data);
-				SpeakNetwork(data.data);
-			}
+		}
+	});
+
+	common.socket.on('updateAnalysis', function(data) {
+		if(data != null){
+			self.mp.display(data.data, data.mindwaveAverage);
+			SpeakNetwork(data.data, data.totalSpeakTime, data.speakTransition);
+			TotalSpeakChart(data.data, data.totalSpeakTime);
+			
+			var t = self.timer.getTime();
+			t = Math.floor(t / 1000); //sec
+			var h =  Math.floor(t / 3600);
+			if(h < 10){h = "0" + h;}
+			var m =  Math.floor((t % 3600) / 60);
+			if(m < 10){m = "0" + m;}
+			var s =  t % 60;
+			if(s < 10){s = "0" + s;}
+			self.analysisTime.innerHTML = self.lastAnalysisTime + "-" +  h + ":" + m + ":" + s;
+			self.lastAnalysisTime = h + ":" + m + ":" + s;
+
 		}
 	});
 
@@ -191,7 +208,7 @@ function MAIN(){
 		this.ctx.stroke();
 	}
 
-	MindwavePanel.prototype.display = function(data){
+	MindwavePanel.prototype.display = function(data, mwa){
 		this.reset();
 		this.ctx.fillStyle='#000000';
 		for(var i = 0; i < data.length; i++){
@@ -199,16 +216,18 @@ function MAIN(){
 			//this.ctx.moveTo(this.lastx[i],this.lasty[i]);
 			//this.ctx.lineTo(lx(data[i].meditation[data[i].meditation.length - 1]) + 2,ly(data[i].attention[data[i].attention.length - 1]) + 2);
 			//this.ctx.stroke();
-			if(data[i].speak == 1){
-				this.ctx.fillStyle='#ff0000';
-			}else{
-				this.ctx.fillStyle='#000000';
-			}
-			this.ctx.fillRect(lx(data[i].meditation[data[i].meditation.length - 1]), ly(data[i].attention[data[i].attention.length - 1]), 5, 5);
-			this.ctx.fillText(data[i].id + ":" +data[i].name , lx(data[i].meditation[data[i].meditation.length - 1]) + 5 , ly(data[i].attention[data[i].attention.length - 1]) + 5);  
+			/*
+			   if(data[i].speak == 1){
+			   this.ctx.fillStyle='#ff0000';
+			   }else{
+			   this.ctx.fillStyle='#000000';
+			   }
+			   */
+			this.ctx.fillRect(lx(mwa[i][1]), ly(mwa[i][0]), 5, 5);
+			this.ctx.fillText(i + ":" +data[i].name , lx(mwa[i][1]) + 5 , ly(mwa[i][0]) + 5);  
 			this.ctx.fillStyle='#000000';
-			this.lastx[i] = lx(data[i].meditation[data[i].meditation.length - 1]);
-			this.lasty[i] = ly(data[i].attention[data[i].attention.length - 1]);
+			//this.lastx[i] = lx(data[i].meditation[data[i].meditation.length - 1]);
+			//this.lasty[i] = ly(data[i].attention[data[i].attention.length - 1]);
 		}
 
 		function lx(_x){
@@ -240,7 +259,7 @@ function MAIN(){
 	}
 
 	SpeakPanel.prototype.display = function(data){
-		console.log(data);
+		//console.log(data);
 		this.reset();
 		var uw = 30;
 		var bw = 3;
@@ -249,7 +268,7 @@ function MAIN(){
 			//id and name
 			this.ctx.fillStyle = "rgb(0, 0, 0)";
 			this.ctx.fillText(data[di].id + ":" +data[di].name , 7 , data[di].id * uw + 21);  
-			console.log(data[di].speakTime.length);
+			//console.log(data[di].speakTime.length);
 
 			//speak
 			for(var si = 0; si < data[di].speakTime.length; si++){
@@ -287,26 +306,28 @@ function MAIN(){
 		return color;
 	}
 
-	function TotalSpeakChart(data){ 
+	function TotalSpeakChart(data,tst){ 
 		var cdata = [['総発話時間']] 
 			for(var di = 0; di < data.length; di++){
-				cdata.push([data[di].name, Math.floor(data[di].totalSpeakTime / 1000)]);
+				cdata.push([data[di].name, Math.floor(tst[di] / 1000)]);
 			}
-		console.dir(cdata);
+		//console.dir(cdata);
 		var chartdata = {
 			"config": {
-				"title": "",
-				"subTitle": "",
+				"width": 480,
+				"height": 400,
 				"type": "pie",
 				"percentVal": "yes",
 				"useVal": "yes",
 				"pieDataIndex": 0,
 				"colNameFont": "100 18px 'Arial'",
-				"pieRingWidth": 80,
-				"pieHoleRadius": 40,
+				"pieRingWidth": 50,
+				"pieHoleRadius": 70,
 					//		"textColor": "#888",
 				"bg": "#fff",
 				"textColor": "#696969",
+				"paddingTop": 0,
+				"paddingLeft": 0,
 				"useShadow" : "no"
 			},
 			"data":cdata 
@@ -314,26 +335,26 @@ function MAIN(){
 		ccchart.init('totalSpeakChart', chartdata);
 	}
 
-	function SpeakNetwork(data){ 
+	function SpeakNetwork(data,tst,st){ 
 		// create an array with nodes
 		var nodes = new vis.DataSet([
-				{id: 0, label: data[0].id + ":" +data[0].name, x:0, y:0},
-				{id: 1, label: data[1].id + ":" +data[1].name, x:200, y:0},
-				{id: 2, label: data[2].id + ":" +data[2].name, x:0, y:200},
-				{id: 3, label: data[3].id + ":" +data[3].name, x:200, y:200},
-				{id: 4, label: data[4].id + ":" +data[4].name, x:100, y:300}
+				{id: 0, shape:"dot", size:tst[0]/5000, label:data[0].name + "(" + Math.floor(tst[0]/1000) + ")", x:0, y:0},
+				{id: 1, shape:"dot", size:tst[1]/5000, label:data[1].name + "(" + Math.floor(tst[1]/1000) + ")", x:200, y:0},
+				{id: 2, shape:"dot", size:tst[2]/5000, label:data[2].name + "(" + Math.floor(tst[2]/1000) + ")", x:0, y:200},
+				{id: 3, shape:"dot", size:tst[3]/5000, label:data[3].name + "(" + Math.floor(tst[3]/1000) + ")", x:200, y:200},
+				{id: 4, shape:"dot", size:tst[4]/5000, label:data[4].name + "(" + Math.floor(tst[4]/1000) + ")", x:100, y:300}
 		]);
 
 		// create an array with edges
 		var edgedata = []
 			for(var ci = 0; ci < 5; ci++){
 				for(var toci = 0; toci < 5; toci++){
-					if(data[ci].speaktoWho[toci] != 0){
-						edgedata.push({from: ci, to: toci, width: data[ci].speaktoWho[toci] / 10, arrows:{to:{scaleFactor:0.2}}});
+					if(st[ci][toci] != 0 && ci != toci){
+						edgedata.push({from: ci, to: toci, label:st[ci][toci], width: st[ci][toci], arrows:{to:{scaleFactor:0.2}}});
 					}				
 				}
 			}
-		console.log(edgedata);
+
 		var edges = new vis.DataSet(edgedata);
 
 		// create a network

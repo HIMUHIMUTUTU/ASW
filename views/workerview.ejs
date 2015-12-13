@@ -10,10 +10,7 @@
 	<body>
 		<h1>worker用入力情報表示画面</h1>
 		<p>PC:<%= id %> お名前:<span id="username">-</span>さん(<a id="nameChange">変更</a>) 時間:<span id="time">00:00:00</span></p>
-		<p><h2>メッセージ</h2></p>
-		<div id="workermessage"></div>
-		<div id="workeranswer"></div>
-		<p><h2>アンケート</h2></p>
+		<!-- <p><h2>アンケート</h2></p> -->
 		<div id="metrics">
 		<p><%= config.usermetric[0] %>: <span id="metricValue1">0</span></p>
 		<p><input type="range" id="metric1" name="metric" min="-10" max="10"></p>

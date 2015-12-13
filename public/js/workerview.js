@@ -214,6 +214,7 @@ function MAIN(){
 							var t = self.timer.getTime();
 							if(self.timer.status_flag != 0){
 								common.socket.emit('updateSpeak', {id:common.client.id, speak:0, time:t});
+								//common.socket.emit('updateMindwave', {id:common.client.id, attention:common.client.id * 30, meditation:common.client.id * 10, time:t});
 							}
 							this.status_flag = 0;
 						}

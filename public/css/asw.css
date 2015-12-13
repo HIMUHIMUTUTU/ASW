@@ -62,11 +62,23 @@ canvas#speakPanel {
 }
 
 div#speakNetwork {
-	width: 600px;
+	width: 450px;
 	height: 400px;
 }
 
+/** dj view **/
+
+div.block{
+	/** border: solid 1px #696969; **/
+	float: left;
+}
+
+
+
+/** worker view **/
+
 div#metrics{
+	display: none;
 	width: 500px;
 }
 
@@ -121,6 +133,8 @@ input[type=range]::-ms-thumb {
 	cursor: pointer;
 	height: 14.5px;
 }
+
+
 
 /** feedback view **/
 div#messagee {

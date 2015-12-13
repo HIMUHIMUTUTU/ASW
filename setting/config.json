@@ -2,9 +2,9 @@
 	"requirement": {
 		"idnumber": 5,
 		"usermetric": [
-			"会議を楽しんでいる",
-			"会議に集中している",
-			"今発言したい"
+			"-",
+			"-",
+			"-"
 		],
 		"feedback": {
 			"sound": [

@@ -12,8 +12,11 @@
 	</head>
 	<body>
 		<h1>DJ用集計・フィードバック画面</h1>
+		<p><a class="dj" id="startTimer">Start/Reset</a></p>
+		<p><span id="time">00:00:00</span></p>
 
-		<h2>入力指標サマリー</h2>
+		<h2>データ一覧</h2>
+		<h3>現在値</h3>
 		<table id = "sumtable">
 			<tr id="tr0">
 				<th id="th0">id</th>
@@ -22,7 +25,7 @@
 				<th id="th3"><%= config.usermetric[1] %></th>
 				<th id="th4"><%= config.usermetric[2] %></th>
 				<th id="th5">発話</th>
-				<th id="th6">総発話時間</th>
+				<th id="th6">-</th>
 				<th id="th7">ATTENTION</th>
 				<th id="th8">MEDITATION</th>
 			</tr>
@@ -34,23 +37,31 @@
 			</tr>
 			<% } %>
 		</table>
-		<h2>測定記録</h2>
-		<p><a class="dj" id="startTimer">Start/Reset</a></p>
-		<p><span id="time">00:00:00</span></p>
-		<h3>脳波パネル</h3>
-		<canvas id="mindwavePanel" width="300" height="300"></canvas>
-		<p>&nbsp;</p>
 		<p>&nbsp;</p>
 		<h3>時系列プロット</h3>
 		<canvas id="speakPanel" width="1000" height="200"></canvas>
 		<p><a id="p1">1</a>&nbsp;<a id="p2">2</a>&nbsp;<a id="p3">3</a> </p>
-		<h3>累積発話量比率</h3>
-		<canvas id="totalSpeakChart"></canvas>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<h3>会話ネットワーク</h3>
-		<div id="speakNetwork"></div>
-		<hr /> 
+
+		<h2>区間分析</h2>
+		<!-- <p><a class="dj" id="lap">区間集計取得</a></p> -->
+		<p>期間:<span id="analysisTime">-</span></p>
+		<div class="block">
+			<h3>脳波パネル(10秒平均の平均)</h3>
+			<canvas id="mindwavePanel" width="300" height="400"></canvas>
+		</div>
+		<div class="block">
+			<h3>会話ネットワーク</h3>
+			<div id="speakNetwork"></div>
+		</div>
+		<div class="block">
+			<h3>累積発話量比率</h3>
+			<canvas id="totalSpeakChart"></canvas>
+		</div>
+		<br style="clear:both;">
+
+		<br />
+		<br />
+		<hr />
 		<h2>フィードバック</h2>
 
 		<p>誰に？</p>

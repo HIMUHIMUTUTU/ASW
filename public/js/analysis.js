@@ -11,11 +11,11 @@ function MAIN(){
 
 	function TotalSpeakChart(data){ 
 		var cdata = [['総発話時間']] 
-				cdata.push(["yoshii", Math.floor(data[0] / 1000)]);
-				cdata.push(["igarashi", Math.floor(data[1] / 1000)]);
-				cdata.push(["gohara", Math.floor(data[2] / 1000)]);
-				cdata.push(["shonai", Math.floor(data[3] / 1000)]);
-				cdata.push(["", Math.floor(data[4] / 1000)]);
+				cdata.push(["0", Math.floor(data[0] / 1000)]);
+				cdata.push(["1", Math.floor(data[1] / 1000)]);
+				cdata.push(["2", Math.floor(data[2] / 1000)]);
+				cdata.push(["3", Math.floor(data[3] / 1000)]);
+				cdata.push(["4", Math.floor(data[4] / 1000)]);
 		console.dir(cdata);
 		var chartdata = {
 			"config": {
@@ -41,11 +41,11 @@ function MAIN(){
 	function SpeakNetwork(total,data){ 
 		// create an array with nodes
 		var nodes = new vis.DataSet([
-				{id: 0, shape:"dot", size:total[0]/5000, label:"yoshii(" + Math.floor(total[0]/1000) + ")", x:0, y:0},
-				{id: 1, shape:"dot", size:total[1]/5000, label:"igarashi(" + Math.floor(total[1]/1000) + ")", x:200, y:0},
-				{id: 2, shape:"dot", size:total[2]/5000, label:"gohara(" + Math.floor(total[2]/1000) + ")", x:0, y:200},
-				{id: 3, shape:"dot", size:total[3]/5000, label:"shonai(" + Math.floor(total[3]/1000) + ")", x:200, y:200},
-				{id: 4, shape:"dot", size:total[4]/5000, label:"(" + Math.floor(total[4]/1000) + ")", x:100, y:300}
+				{id: 0, shape:"dot", size:total[0]/5000, label:"0(" + Math.floor(total[0]/1000) + ")", x:0, y:0},
+				{id: 1, shape:"dot", size:total[1]/5000, label:"1(" + Math.floor(total[1]/1000) + ")", x:200, y:0},
+				{id: 2, shape:"dot", size:total[2]/5000, label:"2(" + Math.floor(total[2]/1000) + ")", x:0, y:200},
+				{id: 3, shape:"dot", size:total[3]/5000, label:"3(" + Math.floor(total[3]/1000) + ")", x:200, y:200},
+				{id: 4, shape:"dot", size:total[4]/5000, label:"4(" + Math.floor(total[4]/1000) + ")", x:100, y:300}
 		]);
 
 		// create an array with edges

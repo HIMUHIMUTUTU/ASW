@@ -1,7 +1,7 @@
-var common = {totalId:0, clientAuth:{dj:{}, worker:{}, feedback:{}}, clientStatus:[], log:null, timer:null, analysis:null};
+var common = {totalId:0, clientAuth:{dj:{}, worker:{}, feedback:{}}, clientStatus:[], log:null, timer:null, analysis:null, loop:null, loopTime:2 * 60 * 1000};
 
 for(var i = 0; i < 5; i++){
-	common.clientStatus.push({id:i, status_flag:0, name:"", metric:[0,0,0], speak:0, speakTime:[], totalSpeakTime:0, speaktoWho:[0,0,0,0,0], mindwaveTime:[0],attention:[0], meditation:[0]});
+	common.clientStatus.push({id:i, status_flag:0, name:"", metric:[0,0,0], speak:0, speakTime:[], totalSpeakTime:0, mindwaveTime:[0],attention:[0], meditation:[0]});
 }
 
 //var routes = require('./routes');
@@ -10,14 +10,12 @@ var app = module.parent.exports;
 var io = app.get('io');
 
 common.timer = new Timer();
-common.analysis = new Analysis();
 
 //case of receive connection of client 
 io.sockets.on('connection', function(socket) {
 
 	//authentication and ID management
 	socket.on('auth', function(data){
-		//console.log(data);
 		common.clientAuth[data.type][socket.id] = socket;
 
 		if(data.id != null && data.type == "worker"){
@@ -30,12 +28,10 @@ io.sockets.on('connection', function(socket) {
 					}
 				}
 			}
-			//console.dir(common.clientAuth);
-			//console.dir(common.clientStatus);
 			common.totalId++;
 			//send client id to client
 			//socket.emit('setid', common.totalId);
-			UpdateDJ("auth");
+			UpdateDJ();
 		}else if(data.type == "dj" && common.timer.status_flag == 1){
 			socket.emit('setdata', common.timer.getTime());
 		}
@@ -49,7 +45,7 @@ io.sockets.on('connection', function(socket) {
 				//common.log.addLog("UPDATEMETRIC," + data.id + "," + data.name);
 			}
 		}
-		UpdateDJ("name");
+		UpdateDJ();
 	}); 
 
 
@@ -62,11 +58,10 @@ io.sockets.on('connection', function(socket) {
 				}
 			}
 		}
-		UpdateDJ("metric");
+		UpdateDJ();
 	}); 
 
 	socket.on('updateSpeak', function(data){
-		//console.log(data);
 		for(var i = 0; i < common.clientStatus.length; i++){
 			if(common.clientStatus[i].id == data.id){
 
@@ -76,7 +71,6 @@ io.sockets.on('connection', function(socket) {
 				var ls = common.clientStatus[i].speakTime.length; 
 				if(data.speak == 1){
 					common.clientStatus[i].speakTime.push([data.time,data.time]);
-					common.analysis.getTransition(data.time);
 
 				}else if(data.speak == 0 && ls != 0){
 					common.clientStatus[i].speakTime[ls - 1][1] = data.time; 
@@ -84,13 +78,14 @@ io.sockets.on('connection', function(socket) {
 						common.log.addLog("SPEAK," + data.id + "," + common.clientStatus[i].speakTime[ls - 1][0] + "," + common.clientStatus[i].speakTime[ls - 1][1] + "\r");
 					}
 				}
-				//total speak time
-				if(data.speak == 0 && ls != 0){
-					common.clientStatus[i].totalSpeakTime += (common.clientStatus[i].speakTime[ls - 1][1] - common.clientStatus[i].speakTime[ls - 1][0]); 
-				}
+				/*total speak time
+				  if(data.speak == 0 && ls != 0){
+				  common.clientStatus[i].totalSpeakTime += (common.clientStatus[i].speakTime[ls - 1][1] - common.clientStatus[i].speakTime[ls - 1][0]); 
+				  }
+				  */
 			}
 		}
-		UpdateDJ("speak");
+		UpdateDJ();
 	}); 
 
 	socket.on('updateMindwave', function(data){
@@ -106,21 +101,38 @@ io.sockets.on('connection', function(socket) {
 				}
 			}
 		}
-		UpdateDJ("mindwave");
+		UpdateDJ();
 	}); 
 
 	//start timer of clients
 	socket.on('startTimer', function(data){
 		Reset();
 		common.timer.startTimer();
-		common.analysis.lasttime = 0;
 		common.log = new Log();
+		common.analysis = new Analysis();
+		if(common.loop != null){
+			clearTimeout(common.loop);
+		}
+		loopAnalysis();
 		for (key in common.clientAuth['worker']){
 			var csocket = common.clientAuth['worker'][key]
 				csocket.emit('startTimer');
 		}
-		UpdateDJ("time");
+		UpdateDJ();
 	}); 
+
+	function loopAnalysis(){
+		console.log("loop");
+		var st = common.analysis.getSpeakTransition();
+		var tst = common.analysis.getTotalSpeakTime();
+		var ma = common.analysis.getMindwaveAverage();
+		common.analysis.setLasttime();
+		for (key in common.clientAuth['dj']){
+			var csocket = common.clientAuth['dj'][key]
+				csocket.emit('updateAnalysis', {data:common.clientStatus, speakTransition: st, totalSpeakTime: tst, mindwaveAverage: ma, time:common.analysis.lasttime});
+		}
+		common.loop = setTimeout(loopAnalysis, common.loopTime);
+	}
 
 	//feedback to feedback view
 	socket.on('feedback', function(data){
@@ -145,20 +157,18 @@ io.sockets.on('connection', function(socket) {
 			common.clientStatus[i].metric = [0,0,0];
 			common.clientStatus[i].speak=0;
 			common.clientStatus[i].speakTime=[];
-			common.clientStatus[i].totalSpeakTime=0;
 			common.clientStatus[i].mindwaveTime=[0];
 			common.clientStatus[i].attention=[0];
 			common.clientStatus[i].meditation=[0];
-			common.clientStatus[i].speaktoWho=[0,0,0,0,0];
 		}
 	}
 
-	function UpdateDJ(type){
+	function UpdateDJ(){
 		//console.dir(common.clientStatus);
 		//send client info to dj
 		for (key in common.clientAuth['dj']){
 			var csocket = common.clientAuth['dj'][key]
-				csocket.emit('updateTable', {type:type, data:common.clientStatus});
+				csocket.emit('updateTable', {data:common.clientStatus});
 		}
 	}
 });
@@ -209,49 +219,94 @@ Timer.prototype.getTime = function(){
 
 function Analysis(){
 	this.lasttime = 0;
-	this.interval = 1 * 60 * 1000;
-	this.to_client = -1;
 }
 
 //get speak transition
-Analysis.prototype.getTransition = function(time){
-	if(time - this.lasttime > this.interval){
-		console.log("GETTRANSITION");
-		//prepare speakstart time data set
-		ss = [[],[],[],[],[]];
-		for(var ci = 0; ci < common.clientStatus.length; ci++){
-			for(var st = 0; st < common.clientStatus[ci].speakTime.length; st++){
-				if(common.clientStatus[ci].speakTime[st][0] >= this.lasttime && common.clientStatus[ci].speakTime[st][0] < time){ 
-					ss[ci].push(common.clientStatus[ci].speakTime[st][0]); 
-				}
-			}
-		}
-		console.dir(ss);
+Analysis.prototype.getSpeakTransition = function(){
+	console.log("GETSPEAKTRANSITION");
+	var to_client = -1;
+	var speakTransition = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
 
-		this.lasttime = time;
-		
-		//choose first element of each clients speakstart time and get max
-		var i = [0,0,0,0,0];	
-		var v = new Array(5);	
+	//prepare speakstart time data set
+	var ss = [[],[],[],[],[]];
 
-		while(!(i[0] == ss[0].length && i[1] == ss[1].length && i[2] == ss[2].length && i[3] == ss[3].length && i[4] == ss[4].length)){
-			var from_client = this.to_client;
-			for(var x = 0; x < ss.length; x++){
-				if(typeof ss[x][i[x]] === "undefined"){v[x] = Infinity}else{v[x] = ss[x][i[x]]}
+	for(var ci = 0; ci < common.clientStatus.length; ci++){
+		for(var st = 0; st < common.clientStatus[ci].speakTime.length; st++){
+			if(common.clientStatus[ci].speakTime[st][0] > this.lasttime){ 
+				ss[ci].push(common.clientStatus[ci].speakTime[st][0]); 
 			}
-			var arr = [v[0],v[1],v[2],v[3],v[4]];
-			//choose max
-			this.to_client = arr.indexOf(Math.min.apply(null,arr));
-			if(from_client != -1){
-				common.clientStatus[from_client].speaktoWho[this.to_client]++;
-			}
-			i[this.to_client]++;
-		}
-		//for log
-		for(var ci = 0; ci < common.clientStatus.length; ci++){
-			console.log(common.clientStatus[ci].speaktoWho);
 		}
 	}
+	console.dir(ss);
+
+	//choose first element of each clients speakstart time and get max
+	var i = [0,0,0,0,0];	
+	var v = new Array(5);	
+
+	while(!(i[0] == ss[0].length && i[1] == ss[1].length && i[2] == ss[2].length && i[3] == ss[3].length && i[4] == ss[4].length)){
+		var from_client = to_client;
+		for(var x = 0; x < ss.length; x++){
+			if(typeof ss[x][i[x]] === "undefined"){v[x] = Infinity}else{v[x] = ss[x][i[x]]}
+		}
+		var arr = [v[0],v[1],v[2],v[3],v[4]];
+		//choose max
+		to_client = arr.indexOf(Math.min.apply(null,arr));
+		if(from_client != -1){
+			speakTransition[from_client][to_client]++;
+		}
+		i[to_client]++;
+	}
+	console.dir(speakTransition);
+	return speakTransition;
 }
 
+Analysis.prototype.getTotalSpeakTime = function(){
+	console.log("GETTOTALSPEAKTIME");
+	totalSpeakTime = [0,0,0,0,0];
+	for(var ci = 0; ci < common.clientStatus.length; ci++){
+		for(var st = 0; st < common.clientStatus[ci].speakTime.length; st++){
+			if(common.clientStatus[ci].speakTime[st][0] > this.lasttime){ 
+				totalSpeakTime[ci] += (common.clientStatus[ci].speakTime[st][1] - common.clientStatus[ci].speakTime[st][0]); 
+			}
+		}
+	}
+	console.dir(totalSpeakTime);
+	return totalSpeakTime;
+}
 
+Analysis.prototype.getMindwaveAverage = function(){
+	console.log("GETMINDWAVEAVERAGE");
+	var mindwaveAverage = [[0,0],[0,0],[0,0],[0,0],[0,0]];
+
+	for(var ci = 0; ci < common.clientStatus.length; ci++){
+		var atotal = 0;
+		var mtotal = 0;
+		var n = 0;
+		for(var st = 0; st < common.clientStatus[ci].mindwaveTime.length; st++){
+			if(common.clientStatus[ci].mindwaveTime[st] > this.lasttime && st < common.clientStatus[ci].attention.length && st < common.clientStatus[ci].meditation.length){ 
+				atotal += common.clientStatus[ci].attention[st];  
+				mtotal += common.clientStatus[ci].meditation[st];  
+				n++;
+			}
+		}
+		if(n != 0){
+			mindwaveAverage[ci][0] = Math.floor(atotal/n);
+			mindwaveAverage[ci][1] = Math.floor(mtotal/n);
+		}
+	}
+	console.dir(mindwaveAverage);
+	return mindwaveAverage;
+}
+
+Analysis.prototype.setLasttime = function(){
+	var arr = [];
+	for(var ci = 0; ci < common.clientStatus.length; ci++){
+		arr.push(common.clientStatus[ci].mindwaveTime[common.clientStatus[ci].mindwaveTime.length - 1]);
+		if(common.clientStatus[ci].speakTime.length != 0){
+			arr.push(common.clientStatus[ci].speakTime[common.clientStatus[ci].speakTime.length - 1][0]);
+		}
+	}
+	var lt = Math.max.apply(null,arr);
+	console.log(lt);
+	this.lasttime = lt;
+}
